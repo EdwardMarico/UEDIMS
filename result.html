@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ข้อมูลนักเรียน</title>
+    <!-- <link rel="icon" href="Logoiconico.ico"> -->
+    <link rel="icon" type="image/png" href="Logoicon1png.png">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            background: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: #111;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo img {
+            height: 36px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .logo span {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            width: 360px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .row {
+            margin-bottom: 8px;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: #111;
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<<header>
+    <div class="topbar">
+        <a href="index.html" class="logo">
+            <img src="Logoicon1png.png" alt="Logo">
+            <span>Unified Education Data & Identity Management System</span>
+        </a>
+    </div>
+</header>
+
+<main>
+    <div class="card">
+      <h2>ข้อมูลนักเรียน</h2>
+
+      <p><b>เลขนักเรียน:</b> <span id="stuid"></span></p>
+      <p><b>เลขบัตรประชาชน:</b> <span id="idcard"></span></p>
+      <p><b>ชื่อ:</b> <span id="name"></span></p>
+      <p><b>วันเกิด:</b> <span id="birthday"></span></p>
+      <p><b>บิดา:</b> <span id="father"></span></p>
+      <p><b>มารดา:</b> <span id="mother"></span></p>
+      <p><b>ผู้ปกครอง:</b> <span id="parent"></span></p>
+      <p><b>โรงเรียนเดิม:</b> <span id="school"></span></p>
+
+    <button onclick="goBack()">กลับหน้าแรก</button>
+
+    </div>
+</main>
+
+<script>
+    const data = JSON.parse(localStorage.getItem("studentData"));
+
+    if (!data) {
+      alert("ไม่มีข้อมูล");
+      location.href = "index.html";
+    }
+
+    document.getElementById("stuid").textContent = data.stuid;
+    document.getElementById("idcard").textContent = data.idcard;
+    document.getElementById("name").textContent = data.name;
+    document.getElementById("birthday").textContent = data.birthday;
+    document.getElementById("father").textContent = data.father;
+    document.getElementById("mother").textContent = data.mother;
+    document.getElementById("parent").textContent = data.parent;
+    document.getElementById("school").textContent = data.school;
+
+    function goBack() {
+        localStorage.removeItem("studentData");
+        window.location.href = "index.html";
+    }
+</script>
+
+</body>
+</html>
