@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UEDIMS</title>
+
+    <link rel="icon" type="image/png" href="Logoicon1png.png">
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            background: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: #111;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .account {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+        }
+
+        .account .profile-pic {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #ccc;
+            margin-right: 8px;
+        }
+
+        .account .login-text {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo img {
+            height: 36px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .logo span {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .logo-text {
+            transition: all 0.2s;
+        }
+
+        .logo-text:hover {
+            content: "Unified Education Data & Identity Management System"; /* ใช้ CSS content ไม่ได้ตรง span ตัวจริง */
+        }
+
+        .home {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 60px);
+            background: #f2f2f2;
+        }
+
+        .menu-logo {
+            width: 80px;
+            margin-top: -25px;
+            margin-bottom: -15px;
+        }
+
+        .menu-card {
+            background: white;
+            padding: 30px;
+            width: 360px;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .menu-card h2 {
+            margin-top: 0;
+        }
+
+        .menu-card p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            background: #111;
+            color: white;
+            transition: 0.2s;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="topbar">
+        <a href="index.html" class="logo">
+            <img src="Logoicon1png.png" alt="Logo">
+            <span id="logoText" class="logo-text">UEDIMS</span>
+        </a>
+
+        <script>
+        const logoSpan = document.getElementById("logoText");
+        const shortText = "UEDIMS";
+        const fullText = "Unified Education Data & Identity Management System";
+
+        logoSpan.addEventListener("mouseenter", () => {
+            logoSpan.textContent = fullText;
+        });
+
+        logoSpan.addEventListener("mouseleave", () => {
+            logoSpan.textContent = shortText;
+        });
+        </script>
+
+        <div class="account">
+            <img src="Logologinpng.png" alt="Profile" class="profile-pic">
+            <span class="login-text">Login</span>
+        </div>
+    </div>
+</header>
+
+<main class="home">
+    <div class="menu-card">
+        <img src="Logoicon1png.png" alt="Logo" class="menu-logo">
+        <h2>Menu</h2>
+
+        <button onclick="location.href='classmateinformation.html'">Verify Personal Information</button>
+        <button onclick="location.href='credit.html'">Credit</button>
+
+    </div>
+</main>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    // --- hover logo ---
+    const logoSpan = document.getElementById("logoText");
+    const shortText = "UEDIMS";
+    const fullText = "Unified Education Data & Identity Management System";
+
+    logoSpan.addEventListener("mouseenter", () => {
+        logoSpan.textContent = fullText;
+    });
+
+    logoSpan.addEventListener("mouseleave", () => {
+        logoSpan.textContent = shortText;
+    });
+
+    // --- account/login ---
+    const accountDiv = document.querySelector(".account");
+    const profilePic = accountDiv.querySelector(".profile-pic");
+    const loginText = accountDiv.querySelector(".login-text");
+
+    // ตรวจสอบว่ามี user login ไหม (ตัวอย่างใช้ localStorage)
+    let loggedInUser = localStorage.getItem("username");
+
+    if (loggedInUser) {
+        loginText.textContent = loggedInUser;
+        profilePic.src = "Logologinpng.png"; // ใส่รูป user จริง
+    } else {
+        loginText.textContent = "Login";
+        profilePic.src = "Logologinpng.png"; // รูป default
+    }
+
+    accountDiv.addEventListener("click", () => {
+        if (!loggedInUser) {
+            window.location.href = "sign in.html"; // ถ้าไม่ login ไปหน้า login
+        } else {
+            window.location.href = "profile.html"; // ถ้า login แล้ว
+        }
+    });
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>UEDIMS</title>
+    <!-- <link rel="icon" href="Logoiconico.ico"> -->
+    <link rel="icon" type="image/png" href="Logoicon1png.png">
+
+
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            background: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .topbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background: #111;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .account {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            color: white;
+        }
+
+        .account .profile-pic {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #ccc;
+            margin-right: 8px;
+        }
+
+        .account .login-text {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: white;
+        }
+
+        .logo img {
+            height: 36px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .logo span {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            width: 360px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-logo {
+            width: 80px;
+            margin-top: -25px;
+            margin-bottom: -15px;
+        }
+
+        h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            background: #111;
+            color: white;
+            transition: 0.2s;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background: #333;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .success {
+            background: #e9f9ee;
+            border: 1px solid #4caf50;
+        }
+
+        .error {
+            background: #ffecec;
+            border: 1px solid #f44336;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="topbar">
+        <a href="index.html" class="logo">
+            <img src="Logoicon1png.png" alt="Logo">
+            <span id="logoText" class="logo-text">UEDIMS</span>
+        </a>
+
+        <script>
+        const logoSpan = document.getElementById("logoText");
+        const shortText = "UEDIMS";
+        const fullText = "Unified Education Data & Identity Management System";
+
+        logoSpan.addEventListener("mouseenter", () => {
+            logoSpan.textContent = fullText;
+        });
+
+        logoSpan.addEventListener("mouseleave", () => {
+            logoSpan.textContent = shortText;
+        });
+        </script>
+
+        <div class="account">
+            <img id="topProfilePic" src="Logologinpng.png" alt="Profile" class="profile-pic">
+            <span id="topLoginText" class="login-text">Login</span>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div class="card">
+        <img src="Logoicon1png.png" alt="Logo" class="card-logo">
+        <h2>Verify Personal Information</h2>
+
+        <form onsubmit="checkID(); return false;">
+            <input
+                type="text"
+                id="idcard"
+                placeholder="ID number or Student ID"
+                required
+            >
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <button onclick="location.href='index.html'">Home</button>
+        <div class="result" id="result"></div>
+    </div>
+</main>
+
+<script>
+    let database = [];
+
+    fetch("data.json")
+      .then(res => res.json())
+      .then(data => {
+        database = data;
+      });
+
+    function checkID() {
+        if (database.length === 0) {
+          alert("กำลังโหลดข้อมูล กรุณารอสักครู่");
+          return;
+        }
+
+        const input = document.getElementById("idcard").value.trim();
+
+        const found = database.find(person =>
+            person.idcard === input || person.stuid === input
+        );
+
+        if (found) {
+            localStorage.setItem("studentData", JSON.stringify(found));
+            window.location.href = "result.html";
+        } else {
+            alert("❌ ไม่พบข้อมูลในระบบ");
+        }
+    }
+
+    // --- account/login ---
+    const accountDiv = document.querySelector(".account");
+    const profilePic = accountDiv.querySelector(".profile-pic");
+    const loginText = accountDiv.querySelector(".login-text");
+
+    // ตรวจสอบว่ามี user login ไหม (ตัวอย่างใช้ localStorage)
+    let loggedInUser = localStorage.getItem("username");
+
+    if (loggedInUser) {
+        loginText.textContent = loggedInUser;
+        profilePic.src = "Logologinpng.png"; // ใส่รูป user จริง
+    } else {
+        loginText.textContent = "Login";
+        profilePic.src = "Logologinpng.png"; // รูป default
+    }
+
+    accountDiv.addEventListener("click", () => {
+        if (!loggedInUser) {
+            window.location.href = "sign in.html"; // ถ้าไม่ login ไปหน้า login
+        } else {
+            window.location.href = "profile.html"; // ถ้า login แล้ว
+        }
+    });
+</script>
+
+</body>
+</html>
