@@ -2,10 +2,9 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <title>UEDIMS</title>
+    <title>ข้อมูลนักเรียน</title>
     <!-- <link rel="icon" href="Logoiconico.ico"> -->
     <link rel="icon" type="image/png" href="Logoicon1png.png">
-
 
     <style>
         * {
@@ -84,7 +83,6 @@
         }
 
         .card {
-            text-align: center;
             background: white;
             padding: 30px;
             width: 360px;
@@ -93,6 +91,10 @@
         }
 
         .card-logo {
+            text-align: center;
+        }
+
+        .clogo {
             width: 80px;
             margin-top: -25px;
             margin-bottom: -15px;
@@ -103,58 +105,30 @@
             text-align: center;
         }
 
-        input {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-        }
-
-        button {
-            width: 100%;
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            background: #111;
-            color: white;
-            transition: 0.2s;
-            margin-top: 15px;
-        }
-
-        button:hover {
-            background: #333;
-        }
-
-        .result {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            display: none;
-        }
-
-        .success {
-            background: #e9f9ee;
-            border: 1px solid #4caf50;
-        }
-
-        .error {
-            background: #ffecec;
-            border: 1px solid #f44336;
+        .row {
+            margin-bottom: 8px;
         }
 
         .label {
             font-weight: bold;
         }
 
-
+        button {
+            margin-top: 20px;
+            width: 100%;
+            font-size: 16px;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            background: #111;
+            color: white;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-<header>
+<<header>
     <div class="topbar">
         <a href="index.html" class="logo">
             <img src="Logoicon1png.png" alt="Logo">
@@ -184,52 +158,45 @@
 
 <main>
     <div class="card">
-        <img src="Logoicon1png.png" alt="Logo" class="card-logo">
-        <h2>Verify Personal Information (Admin)</h2>
+      <div class="card-logo">
+          <img src="Logoicon1png.png" alt="Logo" class="clogo">
+      </div>
+      <h2>Student Information</h2>
 
-        <form onsubmit="checkID(); return false;">
-            <input
-                type="text"
-                id="idcard"
-                placeholder="Enter ID number or Student number"
-                required
-            >
+      <p><b>ชื่อ:</b> <span id="name"></span></p>
+      <p><b>เลขนักเรียน:</b> <span id="stuid"></span></p>
+      <p><b>เลขบัตรประชาชน:</b> <span id="idcard"></span></p>
+      <p><b>วันเกิด:</b> <span id="birthday"></span></p>
+      <p><b>บิดา:</b> <span id="father"></span></p>
+      <p><b>มารดา:</b> <span id="mother"></span></p>
+      <p><b>ผู้ปกครอง:</b> <span id="parent"></span></p>
+      <p><b>โรงเรียนเดิม:</b> <span id="school"></span></p>
 
-            <button type="submit">Submit</button>
-        </form>
+    <button onclick="goBack()">Back</button>
 
-        <button onclick="location.href='index.html'">Home</button>
-        <div class="result" id="result"></div>
     </div>
 </main>
 
 <script>
-    let database = [];
+    const data = JSON.parse(localStorage.getItem("studentData"));
 
-    fetch("data.json")
-      .then(res => res.json())
-      .then(data => {
-        database = data;
-      });
+    if (!data) {
+      alert("ไม่มีข้อมูล");
+      location.href = "index.html";
+    }
 
-    function checkID() {
-        if (database.length === 0) {
-          alert("กำลังโหลดข้อมูล กรุณารอสักครู่");
-          return;
-        }
+    document.getElementById("name").textContent = data.name;
+    document.getElementById("stuid").textContent = data.stuid;
+    document.getElementById("idcard").textContent = data.idcard;
+    document.getElementById("birthday").textContent = data.birthday;
+    document.getElementById("father").textContent = data.father;
+    document.getElementById("mother").textContent = data.mother;
+    document.getElementById("parent").textContent = data.parent;
+    document.getElementById("school").textContent = data.school;
 
-        const input = document.getElementById("idcard").value.trim();
-
-        const found = database.find(person =>
-            person.idcard === input || person.stuid === input
-        );
-
-        if (found) {
-            localStorage.setItem("studentData", JSON.stringify(found));
-            window.location.href = "result1.html";
-        } else {
-            alert("❌ ไม่พบข้อมูลในระบบ");
-        }
+    function goBack() {
+        localStorage.removeItem("studentData");
+        window.location.href = "classmateinformationadmin.html";
     }
 
     // --- account/login ---
