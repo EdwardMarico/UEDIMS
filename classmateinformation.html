@@ -176,7 +176,7 @@
         </script>
 
         <div class="account">
-            <img id="topProfilePic" src="Logologinpng.png" alt="Profile" class="profile-pic">
+            <img id="topProfilePic" src="Logologin1png.png" alt="Profile" class="profile-pic">
             <span id="topLoginText" class="login-text">Login</span>
         </div>
     </div>
@@ -242,10 +242,16 @@
 
     if (loggedInUser) {
         loginText.textContent = loggedInUser;
-        profilePic.src = "Logologinpng.png"; // ใส่รูป user จริง
+
+        if (loggedInUser === "Admin") {
+            profilePic.src = "Logoadminpng.png";   // รูป admin
+        } else {
+            profilePic.src = "Logologin1png.png"; // รูป user ปกติ
+        }
+
     } else {
         loginText.textContent = "Login";
-        profilePic.src = "Logologinpng.png"; // รูป default
+        profilePic.src = "Logologin1png.png"; // รูป default
     }
 
     accountDiv.addEventListener("click", () => {

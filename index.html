@@ -127,6 +127,12 @@
             transition: 0.2s;
             margin-top: 15px;
         }
+
+        button.disabled {
+            background: gray;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
@@ -153,7 +159,7 @@
         </script>
 
         <div class="account">
-            <img src="Logologinpng.png" alt="Profile" class="profile-pic">
+            <img src="Logologin1png.png" alt="Profile" class="profile-pic">
             <span class="login-text">Login</span>
         </div>
     </div>
@@ -165,14 +171,29 @@
         <h2>Menu</h2>
 
         <button onclick="location.href='classmateinformation.html'">Verify Personal Information</button>
-        <button onclick="location.href='credit.html'">Credit</button>
+        <button onclick="location.href='credit.html'">Credit Website</button>
+        <button id="adminCmdBtn" onclick="location.href='cmdp.html'">
+            Command Prompt (Admin)
+        </button>
 
     </div>
 </main>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-    // --- hover logo ---
+
+    const loggedInUser = localStorage.getItem("username");
+
+    /* ---------- Admin Button ---------- */
+    const adminBtn = document.getElementById("adminCmdBtn");
+
+    if (loggedInUser !== "Admin") {
+        adminBtn.classList.add("disabled");
+        adminBtn.disabled = true;
+        adminBtn.title = "Admin only";
+    }
+
+    /* ---------- Logo Hover ---------- */
     const logoSpan = document.getElementById("logoText");
     const shortText = "UEDIMS";
     const fullText = "Unified Education Data & Identity Management System";
@@ -185,27 +206,29 @@ document.addEventListener("DOMContentLoaded", () => {
         logoSpan.textContent = shortText;
     });
 
-    // --- account/login ---
+    /* ---------- Account/Login ---------- */
     const accountDiv = document.querySelector(".account");
     const profilePic = accountDiv.querySelector(".profile-pic");
     const loginText = accountDiv.querySelector(".login-text");
 
-    // ตรวจสอบว่ามี user login ไหม (ตัวอย่างใช้ localStorage)
-    let loggedInUser = localStorage.getItem("username");
-
     if (loggedInUser) {
         loginText.textContent = loggedInUser;
-        profilePic.src = "Logologinpng.png"; // ใส่รูป user จริง
+
+        if (loggedInUser === "Admin") {
+            profilePic.src = "Logoadminpng.png";
+        } else {
+            profilePic.src = "Logologin1png.png";
+        }
     } else {
         loginText.textContent = "Login";
-        profilePic.src = "Logologinpng.png"; // รูป default
+        profilePic.src = "Logologin1png.png";
     }
 
     accountDiv.addEventListener("click", () => {
         if (!loggedInUser) {
-            window.location.href = "sign in.html"; // ถ้าไม่ login ไปหน้า login
+            window.location.href = "sign in.html";
         } else {
-            window.location.href = "profile.html"; // ถ้า login แล้ว
+            window.location.href = "profile.html";
         }
     });
 });

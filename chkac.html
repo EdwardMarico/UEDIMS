@@ -168,7 +168,7 @@
         </script>
 
         <div class="account">
-            <img src="Logologinpng.png" alt="Profile" class="profile-pic" id="topProfilePic">
+            <img src="Logologin1png.png" alt="Profile" class="profile-pic" id="topProfilePic">
             <span class="login-text" id="topLoginText">Login</span>
         </div>
     </div>
@@ -176,7 +176,7 @@
 
 <main class="home">
     <div class="menu-card">
-        <img id="profilePic" src="Logologinpng.png" alt="Profile" class="menu-logo">
+        <img id="profilePic" src="Logologin1png.png" alt="Profile" class="menu-logo">
         <h2>Account</h2>
         <h2 id="profileName" class="nameuser">None</h2>
 
@@ -196,42 +196,52 @@ function updateProfileDisplay() {
     const tempID = sessionStorage.getItem("tempUserID"); // ถ้าเพิ่งกรอก ID
 
     if(username){
-        // ถ้าล็อกอินแล้ว ใช้ localStorage
         profileName.textContent = username;
-        profilePic.src = "Logologinpng.png";
+        profilePic.src = "Logologin1png.png";
         topLoginText.textContent = username;
-        topProfilePic.src = "Logologinpng.png";
+        topProfilePic.src = "Logologin1png.png";
     } else if(tempID){
-        // ถ้ายังไม่ล็อกอิน แต่มี tempID → fetch data.json
-        fetch('data.json')
-            .then(res => res.json())
-            .then(data => {
-                const user = data.find(u => u.stuid === tempID || u.idcard === tempID);
-                if(user){
-                    profileName.textContent = user.name; // แสดงชื่อจริงชั่วคราว
-                    profilePic.src = "Logologinpng.png"; // รูป default
-                    topLoginText.textContent = "Login";
-                    topProfilePic.src = "Logologinpng.png";
-                } else {
-                    profileName.textContent = "ID not found!";
-                }
-            });
+        if(tempID === "*admin.uedims"){
+            // special case สำหรับ admin
+            profileName.textContent = "Admin";
+            profilePic.src = "Logoadminpng.png";
+            topLoginText.textContent = "Log in";
+            topProfilePic.src = "Logologin1png.png";
+        } else {
+            fetch('data.json')
+                .then(res => res.json())
+                .then(data => {
+                    const user = data.find(u => u.stuid === tempID || u.idcard === tempID);
+                    if(user){
+                        profileName.textContent = user.name;
+                        profilePic.src = "Logologin1png.png";
+                        topLoginText.textContent = "Login";
+                        topProfilePic.src = "Logologin1png.png";
+                    } else {
+                        profileName.textContent = "ID not found!";
+                    }
+                });
+        }
     } else {
-        // ไม่มีทั้ง tempID และ username
         profileName.textContent = "None";
-        profilePic.src = "Logoicon1png.png";
+        profilePic.src = "Logoadminpng.png";
         topLoginText.textContent = "Login";
-        topProfilePic.src = "Logologinpng.png";
+        topProfilePic.src = "Logologin1png.png";
     }
 }
 
-// เรียกตอนโหลดหน้า
 document.addEventListener("DOMContentLoaded", updateProfileDisplay);
 
-// ปุ่ม It's me → ยืนยันล็อกอินจริง
 function itsMe() {
     const tempID = sessionStorage.getItem("tempUserID");
     if(tempID){
+        if(tempID === "*admin.uedims") {
+            localStorage.setItem("username", "Admin");
+            sessionStorage.removeItem("tempUserID");
+            window.location.href = "profile.html"; // ไปหน้าโปรไฟล์
+            return;
+        }
+
         fetch('data.json')
             .then(res => res.json())
             .then(data => {
@@ -245,13 +255,36 @@ function itsMe() {
     }
 }
 
-// ปุ่ม Logout
 function logout(){
     localStorage.removeItem("username");
     sessionStorage.removeItem("tempUserID");
     updateProfileDisplay();
     window.location.href = "index.html";
 }
+
+// --- account/login ---
+    const accountDiv = document.querySelector(".account");
+    const profilePic = accountDiv.querySelector(".profile-pic");
+    const loginText = accountDiv.querySelector(".login-text");
+
+    // ตรวจสอบว่ามี user login ไหม (ตัวอย่างใช้ localStorage)
+    let loggedInUser = localStorage.getItem("username");
+
+    if (loggedInUser) {
+        loginText.textContent = loggedInUser;
+        profilePic.src = "Logologin1png.png"; // ใส่รูป user จริง
+    } else {
+        loginText.textContent = "Login";
+        profilePic.src = "Logologin1png.png"; // รูป default
+    }
+
+    accountDiv.addEventListener("click", () => {
+        if (!loggedInUser) {
+            window.location.href = "sign in.html"; // ถ้าไม่ login ไปหน้า login
+        } else {
+            window.location.href = "profile.html"; // ถ้า login แล้ว
+        }
+    });
 </script>
 
 </body>

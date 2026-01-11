@@ -172,7 +172,7 @@
         </script>
 
         <div class="account">
-            <img id="topProfilePic" src="Logologinpng.png" alt="Profile" class="profile-pic">
+            <img id="topProfilePic" src="Logologin1png.png" alt="Profile" class="profile-pic">
             <span id="topLoginText" class="login-text">Login</span>
         </div>
     </div>
@@ -180,7 +180,7 @@
 
 <main class="home">
     <div class="menu-card">
-        <img id="profilePic" src="Logologinpng.png" alt="Profile" class="menu-logo">
+        <img id="profilePic" src="Logologin1png.png" alt="Profile" class="menu-logo">
         <h2 class="profile">Profile</h2>
 
         <h2 id="profileName" class="nameuser"></h2>
@@ -220,6 +220,24 @@ function updateProfile() {
     let tempID = sessionStorage.getItem("tempUserID");
     let username = localStorage.getItem("username");
 
+    // ถ้าเป็น admin
+    if(tempID === "*admin.uedims" || username === "Admin") {
+        profileName.textContent = "Admin";
+        profilePic.src = "Logoadminpng.png";
+        topLoginText.textContent = "Admin";
+        topProfilePic.src = "Logoadminpng.png";
+
+        stuidEl.textContent = "-";
+        idcardEl.textContent = "-";
+        nameEl.textContent = "Admin";
+        birthdayEl.textContent = "-";
+        fatherEl.textContent = "-";
+        motherEl.textContent = "-";
+        parentEl.textContent = "-";
+        schoolEl.textContent = "-";
+        return;
+    }
+
     if(tempID || username){
         fetch('data.json')
         .then(res => res.json())
@@ -233,9 +251,9 @@ function updateProfile() {
 
             if(user){
                 profileName.textContent = user.name;
-                profilePic.src = "Logologinpng.png";
+                profilePic.src = "Logologin1png.png";
                 topLoginText.textContent = user.name;
-                topProfilePic.src = "Logologinpng.png";
+                topProfilePic.src = "Logologin1png.png";
 
                 stuidEl.textContent = user.stuid || "-";
                 idcardEl.textContent = user.idcard || "-";
@@ -252,7 +270,7 @@ function updateProfile() {
         profileName.textContent = "None";
         profilePic.src = "Logoicon1png.png";
         topLoginText.textContent = "Login";
-        topProfilePic.src = "Logologinpng.png";
+        topProfilePic.src = "Logologin1png.png";
 
         stuidEl.textContent = "-";
         idcardEl.textContent = "-";
@@ -273,6 +291,30 @@ function logout() {
 }
 
 document.addEventListener("DOMContentLoaded", updateProfile);
+
+// --- account/login ---
+    const accountDiv = document.querySelector(".account");
+    const profilePic = accountDiv.querySelector(".profile-pic");
+    const loginText = accountDiv.querySelector(".login-text");
+
+    // ตรวจสอบว่ามี user login ไหม (ตัวอย่างใช้ localStorage)
+    let loggedInUser = localStorage.getItem("username");
+
+    if (loggedInUser) {
+        loginText.textContent = loggedInUser;
+        profilePic.src = "Logologin1png.png"; // ใส่รูป user จริง
+    } else {
+        loginText.textContent = "Login";
+        profilePic.src = "Logologin1png.png"; // รูป default
+    }
+
+    accountDiv.addEventListener("click", () => {
+        if (!loggedInUser) {
+            window.location.href = "sign in.html"; // ถ้าไม่ login ไปหน้า login
+        } else {
+            window.location.href = "profile.html"; // ถ้า login แล้ว
+        }
+    });
 </script>
 
 </body>

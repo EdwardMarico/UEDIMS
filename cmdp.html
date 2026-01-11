@@ -107,6 +107,15 @@
             margin-bottom: 15px;
         }
 
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            margin-bottom: 0px;
+        }
+
         button {
             width: 100%;
             padding: 10px;
@@ -154,10 +163,55 @@
 <main class="home">
     <div class="menu-card">
         <img src="Logoicon1png.png" alt="Logo" class="menu-logo">
-        <h2>Credit Website</h2>
+        <h2>Command Prompt</h2>
 
-        <p>Creator by: Edward Marico</p>
-        <p>Design, Code & Art: Edward Marico</p>
+        <div id="cmdWindow" style="
+            background:#000;
+            color:#0f0;
+            padding:10px;
+            border-radius:8px;
+            font-family: monospace;
+            font-size:14px;
+            height:200px;
+            overflow-y:auto;
+            margin-bottom:10px;
+            text-align: left;
+            white-space: pre-wrap;
+        "></div>
+
+        <input
+            id="cmdInput"
+            type="text"
+            placeholder=">_"
+            style="
+                width:100%;
+                background:#000;
+                color:#0f0;
+                border:none;
+                padding:10px;
+                font-family: monospace;
+                font-size:14px;
+                outline:none;
+            "
+            onkeydown="handleKey(event)"
+            oninput="handleHint()"
+        >
+
+        <div id="cmdHelp" style="
+            display:none;
+            background:#111;
+            color: #00FF00;
+            text-align:left;
+            padding:8px;
+            border-radius:6px;
+            font-family: monospace;
+            font-size:14px;
+            margin-top:6px;
+        ">
+        </div>
+
+        <button onclick="runCmd()">Run</button>
+
 
         <button onclick="location.href='index.html'">Home</button>
     </div>
@@ -208,6 +262,123 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+const commands = [
+    "/help",
+    "/whoami",
+    "/clear",
+    "/logout",
+    "/version",
+    "/status"
+];
+
+let selectedIndex = -1;
+
+function print(text){
+    const win = document.getElementById("cmdWindow");
+    win.innerHTML += text + "<br>";
+    win.scrollTop = win.scrollHeight;
+}
+
+function handleHint(){
+    const input = cmdInput.value;
+    const help = document.getElementById("cmdHelp");
+
+    if(!input.startsWith("/")){
+        help.style.display = "none";
+        return;
+    }
+
+    const list = commands.filter(c => c.startsWith(input));
+    if(list.length === 0){
+        help.style.display = "none";
+        return;
+    }
+
+    help.style.display = "block";
+    help.innerHTML = list.map((c,i)=>
+        `<div onclick="pickCmd('${c}')"
+              style="padding:3px;cursor:pointer;${i===selectedIndex?'background:#0f0;color:#000':''}">
+            ${c}
+        </div>`
+    ).join("");
+}
+
+function pickCmd(cmd){
+    cmdInput.value = cmd;
+    cmdHelp.style.display = "none";
+    cmdInput.focus();
+}
+
+function handleKey(e){
+    const help = document.getElementById("cmdHelp");
+    const visible = help.style.display === "block";
+    const list = commands.filter(c => c.startsWith(cmdInput.value));
+
+    if(e.key === "ArrowDown" && visible){
+        selectedIndex = (selectedIndex + 1) % list.length;
+        handleHint();
+        e.preventDefault();
+    }
+
+    if(e.key === "ArrowUp" && visible){
+        selectedIndex = (selectedIndex - 1 + list.length) % list.length;
+        handleHint();
+        e.preventDefault();
+    }
+
+    if(e.key === "Enter"){
+        if(visible && selectedIndex >= 0){
+            cmdInput.value = list[selectedIndex];
+            help.style.display = "none";
+            selectedIndex = -1;
+            return;
+        }
+        runCmd();
+    }
+}
+
+function runCmd(){
+    const cmd = cmdInput.value.trim();
+    if(!cmd) return;
+
+    print("> " + cmd);
+
+    switch(cmd){
+        case "/help":
+            print("commands:");
+            commands.forEach(c => print(" - " + c));
+            break;
+
+        case "/whoami":
+            print("User: " + (localStorage.getItem("username") || "Guest"));
+            break;
+
+        case "/version":
+            print("UEDIMS CMDP v1.0");
+            break;
+
+        case "/status":
+            print("System status: OK");
+            break;
+
+        case "/clear":
+            cmdWindow.innerHTML = "";
+            break;
+
+        case "/logout":
+            localStorage.removeItem("username");
+            sessionStorage.removeItem("tempUserID");
+            print("Logged out.");
+            setTimeout(()=>location.href="index.html",1000);
+            break;
+
+        default:
+            print("Unknown command");
+    }
+
+    cmdInput.value = "";
+}
 </script>
 
 </body>

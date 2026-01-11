@@ -162,7 +162,7 @@
         </script>
 
         <div class="account">
-            <img src="Logologinpng.png" alt="Profile" class="profile-pic">
+            <img src="Logologin1png.png" alt="Profile" class="profile-pic">
             <span class="login-text">Login</span>
         </div>
     </div>
@@ -174,7 +174,7 @@
         <h2>Log-in</h2>
 
         <form onsubmit="checkID(); return false;">
-            <input type="text" id="studentID" placeholder="Enter your ID number" required pattern="\d+">
+            <input type="text" id="studentID" placeholder="Enter your ID number">
             <button type="submit">Log in</button>
         </form>
 
@@ -187,12 +187,29 @@
 function checkID() {
     const inputID = document.getElementById("studentID").value;
 
+    // ตรวจสอบ admin ก่อน
+    const adminAccount = {
+        stuid: "admin",       // สามารถใช้รหัสอะไรก็ได้ เช่น "admin"
+        idcard: "admin",          // ไม่จำเป็น
+        name: "admin",
+        birthday: "-",
+        father: "-",
+        mother: "-",
+        parent: "-",
+        school: "-"
+    };
+
+    if(inputID.toLowerCase() === "*admin.uedims"){  // ถ้าพิมพ์ admin
+        sessionStorage.setItem("tempUserID", "*admin.uedims");
+        window.location.href = "chkac.html";
+        return; // ออกจากฟังก์ชันเลย
+    }
+
     fetch('data.json')
         .then(res => res.json())
         .then(data => {
             const user = data.find(u => u.stuid === inputID || u.idcard === inputID);
             if(user){
-                const inputID = document.getElementById("studentID").value;
                 sessionStorage.setItem("tempUserID", inputID); // เก็บชั่วคราว
                 window.location.href = "chkac.html"; // ไปหน้า chkac
             } else {
