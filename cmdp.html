@@ -269,7 +269,8 @@ const commands = [
     "/clear",
     "/logout",
     "/version",
-    "/status"
+    "/status",
+    "/getvpi"
 ];
 
 let selectedIndex = -1;
@@ -322,7 +323,11 @@ function handleKey(e){
     }
 
     if(e.key === "ArrowUp" && visible){
-        selectedIndex = (selectedIndex - 1 + list.length) % list.length;
+        if (selectedIndex === -1) {
+            selectedIndex = list.length - 1; // เริ่มจากตัวสุดท้าย
+        } else {
+            selectedIndex = (selectedIndex - 1 + list.length) % list.length;
+        }
         handleHint();
         e.preventDefault();
     }
@@ -371,6 +376,11 @@ function runCmd(){
             sessionStorage.removeItem("tempUserID");
             print("Logged out.");
             setTimeout(()=>location.href="index.html",1000);
+            break;
+
+        case "/getvpi":
+            print("Going to VPI.");
+            setTimeout(()=>location.href="classmateinformationadmin.html",3000);
             break;
 
         default:

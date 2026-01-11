@@ -185,13 +185,13 @@
 <main>
     <div class="card">
         <img src="Logoicon1png.png" alt="Logo" class="card-logo">
-        <h2>Verify Personal Information</h2>
+        <h2>Verify Personal Information (Admin)</h2>
 
         <form onsubmit="checkID(); return false;">
             <input
                 type="text"
                 id="idcard"
-                placeholder="Enter ID number"
+                placeholder="Enter ID number or Student number"
                 required
             >
 
@@ -221,7 +221,7 @@
         const input = document.getElementById("idcard").value.trim();
 
         const found = database.find(person =>
-            person.idcard === input
+            person.idcard === input || person.stuid === input
         );
 
         if (found) {

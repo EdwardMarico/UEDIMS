@@ -208,12 +208,12 @@ function checkID() {
     fetch('data.json')
         .then(res => res.json())
         .then(data => {
-            const user = data.find(u => u.stuid === inputID || u.idcard === inputID);
+            const user = data.find(u => u.idcard === inputID);
             if(user){
                 sessionStorage.setItem("tempUserID", inputID); // เก็บชั่วคราว
                 window.location.href = "chkac.html"; // ไปหน้า chkac
             } else {
-                alert("ID not found!");
+                alert("❌ ไม่พบข้อมูลในระบบ");
             }
         })
         .catch(err => {
