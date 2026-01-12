@@ -283,7 +283,7 @@ const commands = [
     "/logout",
     "/version",
     "/status",
-    "/getvpi"
+    "/getavpi"
 ];
 
 let selectedIndex = -1;
@@ -391,8 +391,8 @@ function runCmd(){
             setTimeout(()=>location.href="index.html",1000);
             break;
 
-        case "/getvpi":
-            print("Going to VPI.");
+        case "/getavpi":
+            print("Going to AVPI.");
             setTimeout(()=>location.href="classmateinformationadmin.html",2000);
             break;
 
@@ -405,4 +405,5 @@ function runCmd(){
 </script>
 
 </body>
+
 </html>
